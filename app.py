@@ -43,10 +43,45 @@ file = st.sidebar.file_uploader("Upload Dataset (csv):")
 if file is not None:
     df = pd.read_csv(file)
 else:
+    st.warning("Caution: Upload Data")
     st.stop()
 
-with st.expander("Uploaded Data:"):
+st.success("Data successfully uploaded!")
+with st.expander("View Uploaded Data:"):
     st.dataframe(df)
+
+# getting the features
+selected_cols = []
+columns = (
+    df
+    .select_dtypes(include="number")
+    .columns
+    .to_list()
+)
+
+col1 = st.sidebar.selectbox("Select Feature 1",
+                            columns,
+                            index=None)
+if col1 is None:
+    st.warning("Caution: Select value for Feature 1")
+    st.stop()
+selected_cols.append(col1)
+
+col2 = st.sidebar.selectbox("Select Feature 2",
+                            columns,
+                            index=None)
+if col2 is None:
+    st.warning("Caution: Select value for Feature 2")
+    st.stop()
+elif col1 == col2:
+    st.error("Caution: Feature 1 and Feature 2 must be distinct")
+    st.stop()
+selected_cols.append(col2)
+
+st.success("Features successfully retrieved!")
+
+with st.expander("View Filtered Data:"):
+    st.dataframe(df.loc[:, selected_cols])
 
 # page footer
 st.markdown("""
