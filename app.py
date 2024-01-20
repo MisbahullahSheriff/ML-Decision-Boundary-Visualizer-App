@@ -31,7 +31,16 @@ st.set_page_config(
 st.markdown("""
 # Decision Boundary Visualizer - Web App
             
-### This app will plot the Decision Boundary of a given Machine Learning Classifier for any given dataset
+### This app will analyze the Decision Boundary of a given Machine Learning Classifier for any given Dataset
+""")
+
+st.info("""
+#### This app gives complete control to the User for:
+- Selecting the Dataset to Analyze
+- Selecting the Features for Modelling
+- Selecting the steps to Preprocess the Dataset for Modelling
+- Selecting a Machine Learning Classififcation Algorithm to use
+- Tuning the Hyperparameters of the selected Learning Algorithm
 """)
 
 st.warning("""
@@ -115,6 +124,38 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=7
 )
 test_indices = X_train.index
+
+# displaying selected features
+markers = ["o", "s", "^"]
+colors = ["orange", "deepskyblue", "forestgreen"]
+
+column1, column2 = st.columns(2)
+
+with column1:
+    with st.expander("View Filtered Data:"):
+        st.dataframe(df.loc[:, selected_cols])
+
+with column2:
+    fig, ax = plt.subplots()
+    for cls, marker, color in zip(np.unique(y),
+                                  markers[:n_classes],
+                                  colors[:n_classes]):
+        subset = (y == cls)
+        ax.scatter(
+            X.values[subset, 0],
+            X.values[subset, 1],
+            marker=marker,
+            c=color,
+            edgecolors="black",
+            label=f"{mapping[cls]}"
+        )
+    ax.set(xlabel=selected_cols[0],
+           ylabel=selected_cols[1])
+    ax.set_title("Filtered Data",
+                 fontweight="bold",
+                 fontsize=12)
+    ax.legend(loc="best")
+    st.pyplot(fig)
 
 # page footer
 st.markdown("""
