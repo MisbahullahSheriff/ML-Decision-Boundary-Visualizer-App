@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import (
+    StandardScaler,
+    LabelEncoder
+)
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
@@ -33,8 +36,9 @@ st.markdown("""
 
 st.warning("""
 #### Must See:
-- User must upload files of '.csv' format
-- User must ensure the uploaded data has well-defined column labels
+- The input file should be of '.csv' format
+- The uploaded data must have well-defined column labels
+- The uploaded data must have a discrete target variable (for classification)
 - User must select 2 numeric continous features (for convenient visualization)
 """)
 
@@ -43,7 +47,7 @@ file = st.sidebar.file_uploader("Upload Dataset (csv):")
 if file is not None:
     df = pd.read_csv(file)
 else:
-    st.warning("Caution: Upload Data")
+    st.error("Caution: Upload Data")
     st.stop()
 
 st.success("Data successfully uploaded!")
@@ -63,7 +67,7 @@ col1 = st.sidebar.selectbox("Select Feature 1",
                             columns,
                             index=None)
 if col1 is None:
-    st.warning("Caution: Select value for Feature 1")
+    st.error("Caution: Select value for Feature 1")
     st.stop()
 selected_cols.append(col1)
 
@@ -71,17 +75,46 @@ col2 = st.sidebar.selectbox("Select Feature 2",
                             columns,
                             index=None)
 if col2 is None:
-    st.warning("Caution: Select value for Feature 2")
+    st.error("Caution: Select value for Feature 2")
     st.stop()
 elif col1 == col2:
     st.error("Caution: Feature 1 and Feature 2 must be distinct")
     st.stop()
 selected_cols.append(col2)
 
+target = st.sidebar.selectbox("Select Target Variable",
+                              df.columns.to_list(),
+                              index=None)
+if target is None:
+    st.error("Caution: Select value for Target Variable")
+    st.stop()
+elif (target == col1) or (target == col2):
+    st.error("Caution: Target Variable must be distinct from Feature 1 and Feature 2")
+    st.stop()
+
 st.success("Features successfully retrieved!")
 
-with st.expander("View Filtered Data:"):
-    st.dataframe(df.loc[:, selected_cols])
+# splitting the data
+X = df.loc[:, selected_cols]
+y = df.loc[:, target].copy()
+
+label_encoder = LabelEncoder()
+y = label_encoder.fit_transform(y)
+
+classes = label_encoder.classes_
+n_classes = len(classes)
+mapping = {
+    i: label for i, label in enumerate(classes)
+}
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    stratify=y,
+    test_size=0.2,
+    random_state=7
+)
+test_indices = X_train.index
 
 # page footer
 st.markdown("""
