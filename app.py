@@ -31,6 +31,13 @@ st.markdown("""
 ### This app will plot the Decision Boundary of a given Machine Learning Classifier for any given dataset
 """)
 
+st.warning("""
+#### Must See:
+- User must upload files of '.csv' format
+- User must ensure the uploaded data has well-defined column labels
+- User must select 2 numeric continous features (for convenient visualization)
+""")
+
 # page footer
 st.markdown("""
 ---
