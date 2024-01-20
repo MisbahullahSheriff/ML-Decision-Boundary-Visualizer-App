@@ -38,6 +38,16 @@ st.warning("""
 - User must select 2 numeric continous features (for convenient visualization)
 """)
 
+# getting the data
+file = st.sidebar.file_uploader("Upload Dataset (csv):")
+if file is not None:
+    df = pd.read_csv(file)
+else:
+    st.stop()
+
+with st.expander("Uploaded Data:"):
+    st.dataframe(df)
+
 # page footer
 st.markdown("""
 ---
