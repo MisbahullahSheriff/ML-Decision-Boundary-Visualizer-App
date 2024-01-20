@@ -17,3 +17,15 @@ from sklearn.ensemble import (
     GradientBoostingClassifier
 )
 from xgboost import XGBClassifier
+
+st.set_page_config(
+    page_title="DB Visualizer",
+    layout="wide"
+)
+
+# page header
+st.markdown("""
+# Decision Boundary Visualizer - Web App
+            
+### This app will plot the Decision Boundary of a given Machine Learning Classifier for any given dataset
+""")
