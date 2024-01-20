@@ -19,8 +19,9 @@ from sklearn.ensemble import (
 from xgboost import XGBClassifier
 
 st.set_page_config(
-    page_title="DB Visualizer",
-    layout="wide"
+    page_icon="📈",
+    page_title="ML Decision Boundary Visualizer",
+    layout="wide",
 )
 
 # page header
