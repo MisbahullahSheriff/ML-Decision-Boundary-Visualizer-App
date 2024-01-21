@@ -199,6 +199,17 @@ elif scaling_strategy == "Normalization":
 else:
     scaler = None
 
+# preprocessing data
+preprocessor = Pipeline(steps=[
+    ("imputer", imputer),
+    ("scaler", scaler)
+])
+
+X_train_pre = preprocessor.fit_transform(X_train)
+X_test_pre = preprocessor.transform(X_test)
+
+st.success("Data successfully preprocessed!")
+
 # page footer
 st.markdown("""
 ---
