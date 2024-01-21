@@ -7,6 +7,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import (
     StandardScaler,
+    MinMaxScaler,
     LabelEncoder
 )
 from sklearn.model_selection import train_test_split
@@ -181,6 +182,22 @@ elif imputation_choice == "Constant Value":
 
 imputer = SimpleImputer(strategy=strategy, fill_value=fill_value_choice)
 
+# feature scaling strategy
+scaling_strategy = st.sidebar.selectbox("Select Feature Scaling Strategy",
+                                        ["Standardization",
+                                         "Normalization",
+                                         "No Scaling"],
+                                        index=None)
+
+if scaling_strategy is None:
+    st.error("Caution: Select value for Feature Scaling Strategy")
+    st.stop()
+elif scaling_strategy == "Standardization":
+    scaler = StandardScaler()
+elif scaling_strategy == "Normalization":
+    scaler = MinMaxScaler()
+else:
+    scaler = None
 
 # page footer
 st.markdown("""
