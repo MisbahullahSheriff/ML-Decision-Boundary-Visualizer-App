@@ -123,7 +123,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     test_size=0.2,
     random_state=7
 )
-test_indices = X_train.index
+test_indices = X_test.index
 
 # displaying selected features
 markers = ["o", "s", "^"]
@@ -156,6 +156,31 @@ with column2:
                  fontsize=12)
     ax.legend(loc="best")
     st.pyplot(fig)
+
+# imputation strategy
+imputation_choice = st.sidebar.selectbox("Select Imputation Strategy",
+                                         ["Mean", "Median", "Most Frequent", "Constant Value"],
+                                         index=None)
+fill_value_choice = None
+
+if imputation_choice is None:
+    st.error("Caution: Select Imputation Strategy for handling Missing Values")
+    st.stop()
+elif imputation_choice == "Mean":
+    strategy = "mean"
+elif imputation_choice == "Median":
+    strategy = "median"
+elif imputation_choice == "Most Frequent":
+    strategy = "most_frequent"
+elif imputation_choice == "Constant Value":
+    strategy = "constant"
+    fill_value_choice = st.sidebar.number_input("Enter Constant Value", value=None)
+    if fill_value_choice is None:
+        st.error("Caution: Select Constant Value for Imputation")
+        st.stop()
+
+imputer = SimpleImputer(strategy=strategy, fill_value=fill_value_choice)
+
 
 # page footer
 st.markdown("""
