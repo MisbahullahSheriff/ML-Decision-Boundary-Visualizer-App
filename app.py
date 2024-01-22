@@ -230,6 +230,71 @@ if algorithm is None:
     st.stop()
 elif algorithm == "Naive Bayes":
     classifier = GaussianNB()
+elif algorithm == "Logistic Regression":
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    with column1:
+        penalty_choice = st.selectbox("Regularization Type",
+                                      ["L1", "L2", "Elastic Net", "None"],
+                                      index=None)
+        if penalty_choice == "L1":
+            penalty = "l1"
+        elif penalty_choice == "L2":
+            penalty = "l2"
+        elif penalty_choice == "Elastic Net":
+            penalty = "elasticnet"
+        else:
+            penalty = None
+
+        C = st.number_input("Regularization Strength (C)",
+                            min_value=0.0,
+                            value=None)
+        params["C"] = C
+
+        multi_class_choice = st.selectbox("Multi-class Classification",
+                                          ["Auto",
+                                           "One vs Rest",
+                                           "Softmax"],
+                                           index=None)
+        if multi_class_choice == "Auto":
+            multi_class = "auto"
+        elif multi_class_choice == "One vs Rest":
+            multi_class = "ovr"
+        elif multi_class_choice == "Softmax":
+            multi_class = "multinomial"
+        else:
+            multi_class = None
+        params["multi_class"] = multi_class
+
+    with column2:
+        max_iter = st.slider("Maximum no. of Iterations",
+                             min_value=0,
+                             max_value=1000,
+                             step=1,
+                             value=None)
+        params["max_iter"] = max_iter
+
+        l1_ratio = st.slider("L1 Ratio (Elastic Net)",
+                             min_value=0.0,
+                             max_value=1.0,
+                             step=0.01,
+                             value=None)
+        params["l1_ratio"] = l1_ratio
+
+        random_state = st.number_input("Random State",
+                                       min_value=0,
+                                       step=1,
+                                       value=None)
+        params["random_state"] = random_state
+
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Logistic Regression")
+        st.stop()
+    
+    params["penalty"] = penalty
+    classifier = LogisticRegression(**params)
+    
 
 # button
 
