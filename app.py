@@ -247,7 +247,7 @@ elif algorithm == "Logistic Regression":
         else:
             penalty = None
 
-        C = st.number_input("Regularization Strength (C)",
+        C = st.number_input("Inverse Regularization Strength (C)",
                             min_value=0.0,
                             value=None)
         params["C"] = C
@@ -294,6 +294,63 @@ elif algorithm == "Logistic Regression":
     
     params["penalty"] = penalty
     classifier = LogisticRegression(**params)
+elif algorithm == "Support Vector Machine":
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    with column1:
+        kernel_choice = st.selectbox("Kernel",
+                                     ["Linear",
+                                      "RBF",
+                                      "Polynomial",
+                                      "Sigmoid"],
+                                     index=None)
+        if kernel_choice == "Linear":
+            kernel = "linear"
+        elif kernel_choice == "RBF":
+            kernel = "rbf"
+        elif kernel_choice == "Polynomial":
+            kernel = "poly"
+        elif kernel_choice == "Sigmoid":
+            kernel = "sigmoid"
+        else:
+            kernel = None
+        params["kernel"] = kernel
+
+        C = st.number_input("Inverse Regularization Strength (C)",
+                            min_value=0.0,
+                            value=None)
+        params["C"] = C
+
+        gamma = st.number_input("Kernel Coefficient (gamma)",
+                                min_value=0.0,
+                                value=None)
+        params["gamma"] = gamma
+    
+    with column2:
+        degree = st.slider("Degree (Polynomial Kernel)",
+                           min_value=0,
+                           max_value=10,
+                           step=1,
+                           value=None)
+        params["degree"] = degree
+
+        coef0 = st.number_input("Kernel Coefficient (coef0)",
+                                min_value=0.0,
+                                value=None)
+        params["coef0"] = coef0
+
+        random_state = st.number_input("Random State",
+                                       min_value=0,
+                                       step=1,
+                                       value=None)
+        params["random_state"] = random_state
+    
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Support Vector Machine")
+        st.stop()
+    
+    classifier = SVC(**params)
     
 
 # button
