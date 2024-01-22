@@ -213,6 +213,7 @@ X_test_pre = preprocessor.transform(X_test)
 st.success("Data successfully preprocessed!")
 
 # selecting algorithm
+classifier = None
 algorithm = st.selectbox("Select Classification Algorithm",
                          ["Naive Bayes",
                           "Logistic Regression",
@@ -223,6 +224,14 @@ algorithm = st.selectbox("Select Classification Algorithm",
                           "Gradient Boosting",
                           "XG Boost"],
                          index=None)
+
+if algorithm is None:
+    st.error("Caution: Select Classification Algorithm")
+    st.stop()
+elif algorithm == "Naive Bayes":
+    classifier = GaussianNB()
+
+# button
 
 # page footer
 st.markdown("""
