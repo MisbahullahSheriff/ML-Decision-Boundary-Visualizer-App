@@ -57,12 +57,12 @@ file = st.sidebar.file_uploader("Upload Dataset (csv):")
 if file is not None:
     df = pd.read_csv(file)
 else:
-    st.error("Caution: Upload Data")
+    st.error("Caution: Upload Data", icon="🚨")
     st.stop()
 
 st.success("Data successfully uploaded!")
 with st.expander("View Uploaded Data:"):
-    st.dataframe(df)
+    st.dataframe(df, hide_index=True, use_container_width=True)
 
 # getting the features
 selected_cols = []
@@ -134,7 +134,9 @@ column1, column2 = st.columns(2)
 
 with column1:
     with st.expander("View Filtered Data:"):
-        st.dataframe(df.loc[:, selected_cols])
+        st.dataframe(df.loc[:, selected_cols],
+                     use_container_width=True,
+                     hide_index=True)
 
 with column2:
     fig, ax = plt.subplots()
@@ -209,6 +211,18 @@ X_train_pre = preprocessor.fit_transform(X_train)
 X_test_pre = preprocessor.transform(X_test)
 
 st.success("Data successfully preprocessed!")
+
+# selecting algorithm
+algorithm = st.selectbox("Select Classification Algorithm",
+                         ["Naive Bayes",
+                          "Logistic Regression",
+                          "Support Vector Machine",
+                          "Decision Tree",
+                          "Random Forest",
+                          "Ada Boost",
+                          "Gradient Boosting",
+                          "XG Boost"],
+                         index=None)
 
 # page footer
 st.markdown("""
