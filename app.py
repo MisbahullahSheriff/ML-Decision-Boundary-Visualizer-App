@@ -286,13 +286,13 @@ elif algorithm == "Logistic Regression":
                                        min_value=0,
                                        step=1,
                                        value=None)
-        params["random_state"] = random_state
 
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for Logistic Regression")
         st.stop()
     
     params["penalty"] = penalty
+    params["random_state"] = random_state
     classifier = LogisticRegression(**params)
 elif algorithm == "Support Vector Machine":
     params = dict()
@@ -344,15 +344,89 @@ elif algorithm == "Support Vector Machine":
                                        min_value=0,
                                        step=1,
                                        value=None)
-        params["random_state"] = random_state
     
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for Support Vector Machine")
         st.stop()
     
+    params["random_state"] = random_state
     classifier = SVC(**params)
-    
+elif algorithm == "Decision Tree":
+    params = dict()
+    column1, column2 = st.columns(2)
 
+    with column1:
+        criterion_choice = st.selectbox("Criterion",
+                                        ["Gini Impurity",
+                                         "Entropy",
+                                         "Log Loss"],
+                                        index=None)
+        if criterion_choice == "Entropy":
+            criterion = "entropy"
+        elif criterion_choice == "Gini Impurity":
+            criterion = "gini"
+        elif criterion_choice == "Log Loss":
+            criterion = "log_loss"
+        else:
+            criterion = None
+        params["criterion"] = criterion
+
+        max_features_choice = st.selectbox("Criterion",
+                                           ["Square Root", "Log (base 2)"],
+                                           index=None)
+        if max_features_choice == "Log (base 2)":
+            max_features = "log2"
+        elif max_features_choice == "Square Root":
+            max_features = "sqrt"
+        else:
+            max_features = None
+
+        max_depth = st.slider("Maximum Depth",
+                              min_value=1,
+                              step=1,
+                              value=None)
+        
+        min_samples_leaf = st.slider("Minimum samples for Leaf Node",
+                                     min_value=1,
+                                     max_value=50,
+                                     step=1,
+                                     value=None)
+        params["min_samples_leaf"] = min_samples_leaf
+
+    with column2:
+        min_samples_split = st.number_input("Minimum samples to Split Node",
+                                            min_value=0.01,
+                                            max_value=1.0,
+                                            step=0.01,
+                                            value=None)
+        params["min_samples_split"] = min_samples_split
+
+        min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
+                                                min_value=0.0,
+                                                step=0.01,
+                                                value=None)
+        params["min_impurity_decrease"] = min_impurity_decrease
+
+        ccp_alpha = st.number_input("Cost-complexity Pruning Parameter",
+                                    min_value=0.0,
+                                    step=0.01,
+                                    value=None)
+        params["ccp_alpha"] = ccp_alpha
+
+        random_state = st.number_input("Random State",
+                                       min_value=0,
+                                       step=1,
+                                       value=None)
+        
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Decision Tree")
+        st.stop()
+
+    params["max_depth"] = max_depth
+    params["max_features"] = max_features
+    params["random_state"] = random_state
+    classifier = DecisionTreeClassifier(**params)
+    
 # button
 
 # page footer
