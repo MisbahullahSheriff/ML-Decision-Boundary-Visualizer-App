@@ -411,11 +411,11 @@ elif algorithm == "Decision Tree":
         params["min_samples_leaf"] = min_samples_leaf
 
     with column2:
-        min_samples_split = st.number_input("Fraction of minimum samples to Split Node",
-                                            min_value=0.01,
-                                            max_value=1.0,
-                                            step=0.01,
-                                            value=None)
+        min_samples_split = st.slider("Fraction of minimum samples to Split Node",
+                                      min_value=0.01,
+                                      max_value=1.0,
+                                      step=0.01,
+                                      value=None)
         params["min_samples_split"] = min_samples_split
 
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
@@ -497,11 +497,11 @@ elif algorithm == "Random Forest":
         params["min_samples_leaf"] = min_samples_leaf
     
     with column2:
-        min_samples_split = st.number_input("Fraction of minimum samples to Split Node",
-                                            min_value=0.01,
-                                            max_value=1.0,
-                                            step=0.01,
-                                            value=None)
+        min_samples_split = st.slider("Fraction of minimum samples to Split Node",
+                                      min_value=0.01,
+                                      max_value=1.0,
+                                      step=0.01,
+                                      value=None)
         params["min_samples_split"] = min_samples_split
 
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
@@ -625,19 +625,19 @@ elif algorithm == "Gradient Boosting":
                                      value=None)
     
     with column2:
+        min_samples_split = st.slider("Fraction of minimum samples to Split Node",
+                                      min_value=0.01,
+                                      max_value=1.0,
+                                      step=0.01,
+                                      value=None)
+        params["min_samples_split"] = min_samples_split
+
         learning_rate = st.number_input("Learning Rate",
                                         min_value=1e-4,
                                         step=1e-4,
                                         format="%.4f",
                                         value=None)
         params["learning_rate"] = learning_rate
-
-        min_samples_split = st.number_input("Fraction of minimum samples to Split Node",
-                                            min_value=0.01,
-                                            max_value=1.0,
-                                            step=0.01,
-                                            value=None)
-        params["min_samples_split"] = min_samples_split
 
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
                                                 min_value=0.0,
