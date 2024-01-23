@@ -10,6 +10,12 @@ from sklearn.preprocessing import (
     MinMaxScaler,
     LabelEncoder
 )
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    roc_auc_score,
+    auc
+)
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
@@ -371,8 +377,10 @@ elif algorithm == "Decision Tree":
             criterion = None
         params["criterion"] = criterion
 
-        max_features_choice = st.selectbox("Criterion",
-                                           ["Square Root", "Log (base 2)"],
+        max_features_choice = st.selectbox("Maximum Features",
+                                           ["All",
+                                            "Square Root",
+                                            "Log (base 2)"],
                                            index=None)
         if max_features_choice == "Log (base 2)":
             max_features = "log2"
@@ -426,8 +434,76 @@ elif algorithm == "Decision Tree":
     params["max_features"] = max_features
     params["random_state"] = random_state
     classifier = DecisionTreeClassifier(**params)
+elif algorithm == "Random Forest":
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Random Forest")
+        st.stop()
+
+    # params["max_depth"] = max_depth
+    # params["max_features"] = max_features
+    # params["random_state"] = random_state
+    classifier = RandomForestClassifier(**params)
+elif algorithm == "Ada Boost":
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    with column1:
+        pass
     
-# button
+    with column2:
+        pass
+
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Ada Boost")
+        st.stop()
+
+    # params["max_depth"] = max_depth
+    # params["max_features"] = max_features
+    # params["random_state"] = random_state
+    classifier = AdaBoostClassifier(**params)
+elif algorithm == "Gradient Boosting":
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    with column1:
+        pass
+    
+    with column2:
+        pass
+
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Gradient Boosting")
+        st.stop()
+
+    # params["max_depth"] = max_depth
+    # params["max_features"] = max_features
+    # params["random_state"] = random_state
+    classifier = GradientBoostingClassifier(**params)
+elif algorithm == "XG Boost":
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    with column1:
+        pass
+    
+    with column2:
+        pass
+
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for XG Boost")
+        st.stop()
+
+    # params["max_depth"] = max_depth
+    # params["max_features"] = max_features
+    # params["random_state"] = random_state
+    classifier = XGBClassifier(**params)
+
+# decision-boundary display button
+    
+# model evaluation button
 
 # page footer
 st.markdown("""
