@@ -26,6 +26,7 @@ from sklearn.ensemble import (
     RandomForestClassifier,
     GradientBoostingClassifier
 )
+from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
 
 st.set_page_config(
@@ -228,7 +229,8 @@ algorithm = st.selectbox("Select Classification Algorithm",
                           "Random Forest",
                           "Ada Boost",
                           "Gradient Boosting",
-                          "XG Boost"],
+                          "XG Boost",
+                          "Neural Network"],
                          index=None)
 
 if algorithm is None:
@@ -605,7 +607,7 @@ elif algorithm == "Gradient Boosting":
                               step=1,
                               value=None)
 
-        subsample = st.slider("Fraction of sample Size for each Base Estimator",
+        subsample = st.slider("Fraction of sample size for each Base Estimator",
                               min_value=0.01,
                               max_value=1.0,
                               step=0.01,
@@ -679,19 +681,115 @@ elif algorithm == "XG Boost":
     column1, column2 = st.columns(2)
 
     with column1:
-        pass
+        sampling_choice = st.selectbox("Sampling Method",
+                                       ["Uniform", "Gradient-based"],
+                                       index=None)
+        if sampling_choice == "Uniform":
+            sampling_method = "uniform"
+        elif sampling_choice == "Gradient-based":
+            sampling_method = "gradient_based"
+        else:
+            sampling_method = None
+        params["sampling_method"] = sampling_method
+
+        n_estimators = st.slider("Maximum no. of Estimators (Ensemble Size)",
+                                 min_value=1,
+                                 max_value=1000,
+                                 step=1,
+                                 value=None)
+        params["n_estimators"] = n_estimators
+
+        max_depth = st.slider("Maximum Depth",
+                              min_value=1,
+                              max_value=10,
+                              step=1,
+                              value=None)
+
+        eta = st.slider("Step-size Shrinkage",
+                        min_value=0.0,
+                        max_value=1.0,
+                        step=1e-4,
+                        value=None)
+        
+        subsample = st.slider("Fraction of sample size for each Base Estimator",
+                              min_value=0.01,
+                              max_value=1.0,
+                              step=0.01,
+                              value=None)
+        params["subsample"] = subsample
+
+        colsample_bytree = st.slider("Fraction of features for each Tree",
+                                     min_value=0.01,
+                                     max_value=1.0,
+                                     step=0.01,
+                                     value=None)
+        params["colsample_bytree"] = colsample_bytree
     
     with column2:
-        pass
+        colsample_bylevel = st.slider("Fraction of features for each Tree Level",
+                                      min_value=0.01,
+                                      max_value=1.0,
+                                      step=0.01,
+                                      value=None)
+        params["colsample_bylevel"] = colsample_bylevel
+
+        gamma = st.number_input("Minimum Loss Reduction for Split",
+                                min_value=0.0,
+                                step=1e-4,
+                                format="%.4f",
+                                value=None)
+        
+        alpha = st.number_input("L1 Regularization",
+                                min_value=0.0,
+                                step=1e-4,
+                                format="%.4f",
+                                value=None)
+        
+        lambda_ = st.number_input("L2 Regularization",
+                                  min_value=0.0,
+                                  step=1e-4,
+                                  format="%.4f",
+                                  value=None)
+        
+        min_child_weight = st.number_input("Minimum sum of Instance Weights in each Tree",
+                                           min_value=0.0,
+                                           step=1e-4,
+                                           format="%.4f",
+                                           value=None)
+        
+        random_state = st.number_input("Random State",
+                                       min_value=0,
+                                       step=1,
+                                       value=None)
 
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for XG Boost")
         st.stop()
 
-    # params["max_depth"] = max_depth
-    # params["max_features"] = max_features
-    # params["random_state"] = random_state
+    params["eta"] = eta
+    params["gamma"] = gamma
+    params["alpha"] = alpha
+    params["lambda"] = lambda_
+    params["max_depth"] = max_depth
+    params["min_child_weight"] = min_child_weight
+    params["random_state"] = random_state
     classifier = XGBClassifier(**params)
+else:
+    params = dict()
+    column1, column2 = st.columns(2)
+
+    with column1:
+        pass
+
+    with column2:
+        pass
+
+    if not all(params.values()):
+        st.error("Caution: Select hyperparameters for Neural Network")
+        st.stop()
+
+    # params["random_state"] = random_state
+    classifier = MLPClassifier(**params)
 
 # decision-boundary display button
     
