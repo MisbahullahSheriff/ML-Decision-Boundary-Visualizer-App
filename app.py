@@ -520,21 +520,35 @@ elif algorithm == "Random Forest":
     classifier = RandomForestClassifier(**params)
 elif algorithm == "Ada Boost":
     params = dict()
-    column1, column2 = st.columns(2)
 
-    with column1:
-        pass
-    
-    with column2:
-        pass
+    n_estimators = st.slider("Maximum no. of Estimators (Ensemble Size)",
+                             min_value=1,
+                             max_value=1000,
+                             step=1,
+                             value=None)
+    params["n_estimators"] = n_estimators
+
+    algorithm_choice = st.selectbox("Algorithm",
+                                    ["SAMME", "SAMME.R"],
+                                    index=None)
+    params["algorithm"] = algorithm_choice
+
+    learning_rate = st.number_input("Learning Rate",
+                                    min_value=0.01,
+                                    step=0.01,
+                                    value=None)
+    params["learning_rate"] = learning_rate
+
+    random_state = st.number_input("Random State",
+                                   min_value=0,
+                                   step=1,
+                                   value=None)
 
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for Ada Boost")
         st.stop()
 
-    # params["max_depth"] = max_depth
-    # params["max_features"] = max_features
-    # params["random_state"] = random_state
+    params["random_state"] = random_state
     classifier = AdaBoostClassifier(**params)
 elif algorithm == "Gradient Boosting":
     params = dict()
