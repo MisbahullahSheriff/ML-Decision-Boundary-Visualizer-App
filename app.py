@@ -255,8 +255,9 @@ elif algorithm == "Logistic Regression":
 
         C = st.number_input("Inverse Regularization Strength (C)",
                             min_value=0.0,
+                            step=1e-4,
+                            format="%.4f",
                             value=None)
-        params["C"] = C
 
         multi_class_choice = st.selectbox("Multi-class Classification",
                                           ["Auto",
@@ -275,7 +276,7 @@ elif algorithm == "Logistic Regression":
 
     with column2:
         max_iter = st.slider("Maximum no. of Iterations",
-                             min_value=0,
+                             min_value=1,
                              max_value=1000,
                              step=1,
                              value=None)
@@ -284,9 +285,9 @@ elif algorithm == "Logistic Regression":
         l1_ratio = st.slider("L1 Ratio (Elastic Net)",
                              min_value=0.0,
                              max_value=1.0,
-                             step=0.01,
+                             step=1e-4,
+                             format="%.4f",
                              value=None)
-        params["l1_ratio"] = l1_ratio
 
         random_state = st.number_input("Random State",
                                        min_value=0,
@@ -297,7 +298,9 @@ elif algorithm == "Logistic Regression":
         st.error("Caution: Select hyperparameters for Logistic Regression")
         st.stop()
     
+    params["C"] = C
     params["penalty"] = penalty
+    params["l1_ratio"] = l1_ratio
     params["random_state"] = random_state
     classifier = LogisticRegression(**params)
 elif algorithm == "Support Vector Machine":
@@ -325,13 +328,15 @@ elif algorithm == "Support Vector Machine":
 
         C = st.number_input("Inverse Regularization Strength (C)",
                             min_value=0.0,
+                            step=1e-4,
+                            format="%.4f",
                             value=None)
-        params["C"] = C
 
         gamma = st.number_input("Kernel Coefficient (gamma)",
                                 min_value=0.0,
+                                step=1e-4,
+                                format="%.4f",
                                 value=None)
-        params["gamma"] = gamma
     
     with column2:
         degree = st.slider("Degree (Polynomial Kernel)",
@@ -339,12 +344,12 @@ elif algorithm == "Support Vector Machine":
                            max_value=10,
                            step=1,
                            value=None)
-        params["degree"] = degree
 
         coef0 = st.number_input("Kernel Coefficient (coef0)",
                                 min_value=0.0,
+                                step=1e-4,
+                                format="%.4f",
                                 value=None)
-        params["coef0"] = coef0
 
         random_state = st.number_input("Random State",
                                        min_value=0,
@@ -355,6 +360,10 @@ elif algorithm == "Support Vector Machine":
         st.error("Caution: Select hyperparameters for Support Vector Machine")
         st.stop()
     
+    params["C"] = C
+    params["coef0"] = coef0
+    params["gamma"] = gamma
+    params["degree"] = degree
     params["random_state"] = random_state
     classifier = SVC(**params)
 elif algorithm == "Decision Tree":
@@ -402,7 +411,7 @@ elif algorithm == "Decision Tree":
         params["min_samples_leaf"] = min_samples_leaf
 
     with column2:
-        min_samples_split = st.number_input("Minimum samples to Split Node",
+        min_samples_split = st.number_input("Fraction of minimum samples to Split Node",
                                             min_value=0.01,
                                             max_value=1.0,
                                             step=0.01,
@@ -411,15 +420,15 @@ elif algorithm == "Decision Tree":
 
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
                                                 min_value=0.0,
-                                                step=0.01,
+                                                step=1e-4,
+                                                format="%.4f",
                                                 value=None)
-        params["min_impurity_decrease"] = min_impurity_decrease
 
         ccp_alpha = st.number_input("Cost-complexity Pruning Parameter",
                                     min_value=0.0,
-                                    step=0.01,
+                                    step=1e-4,
+                                    format="%.4f",
                                     value=None)
-        params["ccp_alpha"] = ccp_alpha
 
         random_state = st.number_input("Random State",
                                        min_value=0,
@@ -431,8 +440,10 @@ elif algorithm == "Decision Tree":
         st.stop()
 
     params["max_depth"] = max_depth
+    params["ccp_alpha"] = ccp_alpha
     params["max_features"] = max_features
     params["random_state"] = random_state
+    params["min_impurity_decrease"] = min_impurity_decrease
     classifier = DecisionTreeClassifier(**params)
 elif algorithm == "Random Forest":
     params = dict()
@@ -486,7 +497,7 @@ elif algorithm == "Random Forest":
         params["min_samples_leaf"] = min_samples_leaf
     
     with column2:
-        min_samples_split = st.number_input("Minimum samples to Split Node",
+        min_samples_split = st.number_input("Fraction of minimum samples to Split Node",
                                             min_value=0.01,
                                             max_value=1.0,
                                             step=0.01,
@@ -495,15 +506,15 @@ elif algorithm == "Random Forest":
 
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
                                                 min_value=0.0,
-                                                step=0.01,
+                                                step=1e-4,
+                                                format="%.4f",
                                                 value=None)
-        params["min_impurity_decrease"] = min_impurity_decrease
 
         ccp_alpha = st.number_input("Cost-complexity Pruning Parameter",
                                     min_value=0.0,
-                                    step=0.01,
+                                    step=1e-4,
+                                    format="%.4f",
                                     value=None)
-        params["ccp_alpha"] = ccp_alpha
 
         random_state = st.number_input("Random State",
                                        min_value=0,
@@ -515,8 +526,10 @@ elif algorithm == "Random Forest":
         st.stop()
 
     params["max_depth"] = max_depth
+    params["ccp_alpha"] = ccp_alpha
     params["max_features"] = max_features
     params["random_state"] = random_state
+    params["min_impurity_decrease"] = min_impurity_decrease
     classifier = RandomForestClassifier(**params)
 elif algorithm == "Ada Boost":
     params = dict()
@@ -534,8 +547,9 @@ elif algorithm == "Ada Boost":
     params["algorithm"] = algorithm_choice
 
     learning_rate = st.number_input("Learning Rate",
-                                    min_value=0.01,
-                                    step=0.01,
+                                    min_value=1e-4,
+                                    step=1e-4,
+                                    format="%.4f",
                                     value=None)
     params["learning_rate"] = learning_rate
 
@@ -555,18 +569,110 @@ elif algorithm == "Gradient Boosting":
     column1, column2 = st.columns(2)
 
     with column1:
-        pass
+        loss_choice = st.selectbox("Loss Function",
+                                   ["Log Loss", "Exponential"],
+                                   index=None)
+        if loss_choice == "Log Loss":
+            loss = "log_loss"
+        elif loss_choice == "Exponential":
+            loss = "exponential"
+        else:
+            loss = None
+        params["loss"] = loss
+
+        max_features_choice = st.selectbox("Maximum Features",
+                                           ["All",
+                                            "Square Root",
+                                            "Log (base 2)"],
+                                           index=None)
+        if max_features_choice == "Log (base 2)":
+            max_features = "log2"
+        elif max_features_choice == "Square Root":
+            max_features = "sqrt"
+        else:
+            max_features = None
+        
+        n_estimators = st.slider("Maximum no. of Estimators (Ensemble Size)",
+                                 min_value=1,
+                                 max_value=1000,
+                                 step=1,
+                                 value=None)
+        params["n_estimators"] = n_estimators
+
+        max_depth = st.slider("Maximum Depth",
+                              min_value=1,
+                              max_value=10,
+                              step=1,
+                              value=None)
+
+        subsample = st.slider("Fraction of sample Size for each Base Estimator",
+                              min_value=0.01,
+                              max_value=1.0,
+                              step=0.01,
+                              value=None)
+        params["subsample"] = subsample
+        
+        min_samples_leaf = st.slider("Minimum samples for Leaf Node",
+                                     min_value=1,
+                                     max_value=50,
+                                     step=1,
+                                     value=None)
+        params["min_samples_leaf"] = min_samples_leaf
+
+        n_iter_no_change = st.slider("Number of Iterations for Early Stopping",
+                                     min_value=1,
+                                     step=1,
+                                     value=None)
     
     with column2:
-        pass
+        learning_rate = st.number_input("Learning Rate",
+                                        min_value=1e-4,
+                                        step=1e-4,
+                                        format="%.4f",
+                                        value=None)
+        params["learning_rate"] = learning_rate
+
+        min_samples_split = st.number_input("Fraction of minimum samples to Split Node",
+                                            min_value=0.01,
+                                            max_value=1.0,
+                                            step=0.01,
+                                            value=None)
+        params["min_samples_split"] = min_samples_split
+
+        min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
+                                                min_value=0.0,
+                                                step=1e-4,
+                                                format="%.4f",
+                                                value=None)
+
+        tol = st.number_input("Tolerance for Early Stopping",
+                              min_value=1e-4,
+                              step=1e-4,
+                              format="%.4f",
+                              value=None)
+        params["tol"] = tol
+
+        ccp_alpha = st.number_input("Cost-complexity Pruning Parameter",
+                                    min_value=0.0,
+                                    step=1e-4,
+                                    format="%.4f",
+                                    value=None)
+
+        random_state = st.number_input("Random State",
+                                   min_value=0,
+                                   step=1,
+                                   value=None)
 
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for Gradient Boosting")
         st.stop()
 
-    # params["max_depth"] = max_depth
-    # params["max_features"] = max_features
-    # params["random_state"] = random_state
+    params["max_depth"] = max_depth
+    params["ccp_alpha"] = ccp_alpha
+    params["max_features"] = max_features
+    params["random_state"] = random_state
+    params["n_iter_no_change"] = n_iter_no_change
+    params["min_impurity_decrease"] = min_impurity_decrease
     classifier = GradientBoostingClassifier(**params)
 elif algorithm == "XG Boost":
     params = dict()
