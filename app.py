@@ -677,17 +677,6 @@ elif algorithm == "XG Boost":
     column1, column2 = st.columns(2)
 
     with column1:
-        sampling_choice = st.selectbox("Sampling Method",
-                                       ["Uniform", "Gradient-based"],
-                                       index=None)
-        if sampling_choice == "Uniform":
-            sampling_method = "uniform"
-        elif sampling_choice == "Gradient-based":
-            sampling_method = "gradient_based"
-        else:
-            sampling_method = None
-        params["sampling_method"] = sampling_method
-
         n_estimators = st.slider("Maximum no. of Estimators (Ensemble Size)",
                                  min_value=1,
                                  max_value=1000,
@@ -720,15 +709,15 @@ elif algorithm == "XG Boost":
                                      step=0.01,
                                      value=None)
         params["colsample_bytree"] = colsample_bytree
-    
-    with column2:
+
         colsample_bylevel = st.slider("Fraction of features for each Tree Level",
                                       min_value=0.01,
                                       max_value=1.0,
                                       step=0.01,
                                       value=None)
         params["colsample_bylevel"] = colsample_bylevel
-
+    
+    with column2:
         gamma = st.number_input("Minimum Loss Reduction for Split",
                                 min_value=0.0,
                                 step=1e-4,
