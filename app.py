@@ -330,16 +330,16 @@ elif algorithm == "Support Vector Machine":
         params["kernel"] = kernel
 
         C = st.number_input("Inverse Regularization Strength (C)",
-                            min_value=0.0,
+                            min_value=1e-4,
                             step=1e-4,
                             format="%.4f",
                             value=None)
+        params["C"] = C
 
         gamma = st.number_input("Kernel Coefficient (gamma)",
                                 min_value=0.0,
                                 step=1e-4,
-                                format="%.4f",
-                                value=None)
+                                format="%.4f")
     
     with column2:
         degree = st.slider("Degree (Polynomial Kernel)",
@@ -349,10 +349,10 @@ elif algorithm == "Support Vector Machine":
                            value=None)
 
         coef0 = st.number_input("Kernel Coefficient (coef0)",
-                                min_value=0.0,
+                                min_value=-9999.0,
                                 step=1e-4,
                                 format="%.4f",
-                                value=None)
+                                value=0.0)
 
         random_state = st.number_input("Random State",
                                        min_value=0,
@@ -363,7 +363,6 @@ elif algorithm == "Support Vector Machine":
         st.error("Caution: Select hyperparameters for Support Vector Machine")
         st.stop()
     
-    params["C"] = C
     params["coef0"] = coef0
     params["gamma"] = gamma
     params["degree"] = degree
