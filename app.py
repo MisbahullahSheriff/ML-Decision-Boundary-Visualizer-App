@@ -507,14 +507,12 @@ elif algorithm == "Random Forest":
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
                                                 min_value=0.0,
                                                 step=1e-4,
-                                                format="%.4f",
-                                                value=None)
+                                                format="%.4f")
 
         ccp_alpha = st.number_input("Cost-complexity Pruning Parameter",
                                     min_value=0.0,
                                     step=1e-4,
-                                    format="%.4f",
-                                    value=None)
+                                    format="%.4f")
 
         random_state = st.number_input("Random State",
                                        min_value=0,
