@@ -794,20 +794,89 @@ else:
                 temp = temp.split(",")
                 layers = np.array([int(size) for size in temp if size != ""])
                 params["hidden_layer_sizes"] = True
-                st.write(params["hidden_layer_sizes"])
             else:
                 st.error("Caution: Provide appropriate input for Size of Hidden Layer(s)")
                 st.stop()
+        
+        activation_choice = st.selectbox("Activation Function",
+                                         ["Identity",
+                                          "Sigmoid",
+                                          "Tan-H",
+                                          "ReLU"],
+                                         index=None)
+        if activation_choice == "Uniform":
+            activation = "identity"
+        elif activation_choice == "Sigmoid":
+            activation = "logistic"
+        elif activation_choice == "Tan-H":
+            activation = "tanh"
+        elif activation_choice == "ReLU":
+            activation = "relu"
+        else:
+            activation = None
+        params["activation"] = activation
+
+        solver_choice = st.selectbox("Optimizer",
+                                     ["Adam",
+                                      "LBFGS",
+                                      "Stochastic Gradient Descent"],
+                                     index=None)
+        if solver_choice == "Adam":
+            solver = "adam"
+        elif solver_choice == "LBFGS":
+            solver = "lbfgs"
+        elif solver_choice == "Stochastic Gradient Descent":
+            solver = "sgd"
+        else:
+            solver = None
+        params["solver"] = solver
+
+        max_iter = st.slider("Maximum no. of Iterations for Convergence",
+                             min_value=1,
+                             max_value=1000,
+                             step=1,
+                             value=None)
+        params["max_iter"] = max_iter
+
+        n_iter_no_change = st.slider("Number of Iterations for Early Stopping",
+                                     min_value=1,
+                                     step=1,
+                                     value=None)
 
     with column2:
-        pass
+        learning_rate = st.number_input("Learning Rate",
+                                    min_value=1e-4,
+                                    step=1e-4,
+                                    format="%.4f",
+                                    value=None)
+        params["learning_rate"] = learning_rate
+
+        alpha = st.number_input("L2 Regularization",
+                                min_value=0.0,
+                                step=1e-4,
+                                format="%.4f",
+                                value=None)
+        
+        tol = st.number_input("Tolerance for Early Stopping",
+                              min_value=1e-4,
+                              step=1e-4,
+                              format="%.4f",
+                              value=None)
+        params["tol"] = tol
+
+        random_state = st.number_input("Random State",
+                                       min_value=0,
+                                       step=1,
+                                       value=None)
 
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for Neural Network")
         st.stop()
-        
+
+    params["alpha"] = alpha
     params["hidden_layer_sizes"] = layers
-    # params["random_state"] = random_state
+    params["random_state"] = random_state
+    params["n_iter_no_change"] = n_iter_no_change
     classifier = MLPClassifier(**params)
 
 # training the classifier
