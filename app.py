@@ -849,13 +849,12 @@ else:
                                     step=1e-4,
                                     format="%.4f",
                                     value=None)
-        params["learning_rate"] = learning_rate
+        params["learning_rate_init"] = learning_rate
 
         alpha = st.number_input("L2 Regularization",
                                 min_value=0.0,
                                 step=1e-4,
-                                format="%.4f",
-                                value=None)
+                                format="%.4f")
         
         tol = st.number_input("Tolerance for Early Stopping",
                               min_value=1e-4,
