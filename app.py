@@ -563,18 +563,24 @@ elif algorithm == "Ada Boost":
     params["random_state"] = random_state
     classifier = AdaBoostClassifier(**params)
 elif algorithm == "Gradient Boosting":
+    st.warning("""
+#### Disclaimer:
+- For multi-class classification, select `Log Loss` for parameter `Loss Function`
+- The `Exponential` loss function only works for binary classification problems
+""")
+    
     params = dict()
     column1, column2 = st.columns(2)
 
     with column1:
         loss_choice = st.selectbox("Loss Function",
                                    ["Log Loss",
-                                    "Exponential (only binary classification)"],
+                                    "Exponential"],
                                    help="Use 'Log Loss' for multi-class classififcation",
                                    index=None)
         if loss_choice == "Log Loss":
             loss = "log_loss"
-        elif loss_choice == "Exponential (only binary classification)":
+        elif loss_choice == "Exponential":
             loss = "exponential"
         else:
             loss = None
@@ -760,14 +766,22 @@ elif algorithm == "XG Boost":
     params["random_state"] = random_state
     classifier = XGBClassifier(**params)
 else:
+    st.warning("""
+#### Disclaimer:
+- Provide comma-separated integers for the parameter `Size of Hidden Layer(s)`
+    - Ex1: 10, 1
+    - Ex2: 10, 5, 2
+- `Size of Hidden Layer(s)` will not accept any character(s) apart from numbers and comma
+""")
+    
     params = dict()
     column1, column2 = st.columns(2)
 
     with column1:
         layers_text = st.text_input("Size of Hidden Layer(s)",
                                     value=None,
-                                    placeholder="Provide comma-separated integers (eg: 10, 1)",
-                                    help="Special characters will not be accepted! Kindly provide input in appropriate format.")
+                                    placeholder="Provide input in appropriate format",
+                                    help="Check the Disclaimer above")
         if layers_text is None:
             params["hidden_layer_sizes"] = None
         else:
