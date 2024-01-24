@@ -862,9 +862,12 @@ else:
     params["n_iter_no_change"] = n_iter_no_change
     classifier = MLPClassifier(**params)
 
-# training the classifier
-classifier.fit(X_train_pre, y_train)
-st.success(f"{algorithm} Classifier successully trained!")
+# training classifier button
+if st.button("Train Classifier", use_container_width=True):
+    classifier.fit(X_train_pre, y_train)
+    st.success(f"{algorithm} Classifier successully trained!")
+else:
+    st.stop()
 
 # decision-boundary display button
     
