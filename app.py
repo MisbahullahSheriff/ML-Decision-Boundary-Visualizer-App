@@ -257,10 +257,11 @@ elif algorithm == "Logistic Regression":
             penalty = None
 
         C = st.number_input("Inverse Regularization Strength (C)",
-                            min_value=0.0,
+                            min_value=1e-4,
                             step=1e-4,
                             format="%.4f",
                             value=None)
+        params["C"] = C
 
         multi_class_choice = st.selectbox("Multi-class Classification",
                                           ["Auto",
@@ -301,7 +302,6 @@ elif algorithm == "Logistic Regression":
         st.error("Caution: Select hyperparameters for Logistic Regression")
         st.stop()
     
-    params["C"] = C
     params["penalty"] = penalty
     params["l1_ratio"] = l1_ratio
     params["random_state"] = random_state
@@ -879,6 +879,8 @@ else:
     classifier = MLPClassifier(**params)
 
 # training the classifier
+classifier.fit(X_train_pre, y_train)
+st.success(f"{algorithm} Classifier successully trained!")
 
 # decision-boundary display button
     
