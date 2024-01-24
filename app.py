@@ -568,11 +568,13 @@ elif algorithm == "Gradient Boosting":
 
     with column1:
         loss_choice = st.selectbox("Loss Function",
-                                   ["Log Loss", "Exponential"],
+                                   ["Log Loss",
+                                    "Exponential (only binary classification)"],
+                                   help="Use 'Log Loss' for multi-class classififcation",
                                    index=None)
         if loss_choice == "Log Loss":
             loss = "log_loss"
-        elif loss_choice == "Exponential":
+        elif loss_choice == "Exponential (only binary classification)":
             loss = "exponential"
         else:
             loss = None
@@ -640,8 +642,7 @@ elif algorithm == "Gradient Boosting":
         min_impurity_decrease = st.number_input("Minimum Impurity Decrease to Split Node",
                                                 min_value=0.0,
                                                 step=1e-4,
-                                                format="%.4f",
-                                                value=None)
+                                                format="%.4f")
 
         tol = st.number_input("Tolerance for Early Stopping",
                               min_value=1e-4,
@@ -653,8 +654,7 @@ elif algorithm == "Gradient Boosting":
         ccp_alpha = st.number_input("Cost-complexity Pruning Parameter",
                                     min_value=0.0,
                                     step=1e-4,
-                                    format="%.4f",
-                                    value=None)
+                                    format="%.4f")
 
         random_state = st.number_input("Random State",
                                    min_value=0,
