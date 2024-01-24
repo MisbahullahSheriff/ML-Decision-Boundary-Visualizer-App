@@ -1,3 +1,4 @@
+import re
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -779,7 +780,24 @@ else:
     column1, column2 = st.columns(2)
 
     with column1:
-        pass
+        layers_text = st.text_input("Size of Hidden Layer(s)",
+                                    value=None,
+                                    placeholder="Provide comma-separated integers (eg: 10, 1)",
+                                    help="Special characters will not be accepted! Kindly provide input in appropriate format.")
+        if layers_text is None:
+            params["hidden_layer_sizes"] = None
+        else:
+            pattern = re.compile(r"[^0-9,]")
+            temp = layers_text.replace(" ", "")
+            search = re.search(pattern, temp)
+            if search is None:
+                temp = temp.split(",")
+                layers = np.array([int(size) for size in temp if size != ""])
+                params["hidden_layer_sizes"] = True
+                st.write(params["hidden_layer_sizes"])
+            else:
+                st.error("Caution: Provide appropriate input for Size of Hidden Layer(s)")
+                st.stop()
 
     with column2:
         pass
@@ -787,9 +805,12 @@ else:
     if not all(params.values()):
         st.error("Caution: Select hyperparameters for Neural Network")
         st.stop()
-
+        
+    params["hidden_layer_sizes"] = layers
     # params["random_state"] = random_state
     classifier = MLPClassifier(**params)
+
+# training the classifier
 
 # decision-boundary display button
     
