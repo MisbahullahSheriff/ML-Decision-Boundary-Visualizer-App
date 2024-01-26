@@ -2,6 +2,7 @@ import re
 import numpy as np
 import pandas as pd
 import streamlit as st
+import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn.pipeline import Pipeline
@@ -15,7 +16,9 @@ from sklearn.metrics import (
     accuracy_score,
     f1_score,
     roc_auc_score,
-    auc
+    auc,
+    confusion_matrix,
+    ConfusionMatrixDisplay
 )
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -987,13 +990,17 @@ def plot_boundary():
         np.linspace(min_values[1], max_values[1], 100)
     )
     X_new = np.c_[xx.ravel(), yy.ravel()]
-    y_new_pred = st.session_state["classifier"].predict(X_new).reshape(xx.shape)
+    try:
+        y_new_pred = st.session_state["classifier"].predict(X_new).reshape(xx.shape)
+    except:
+        st.error("Caution: Classifier is not trained yet")
+        st.stop()
 
     cmap = ListedColormap(color_codes)
     plt.contourf(xx, yy, y_new_pred, cmap=cmap, alpha=0.5)
     plt.contour(xx, yy, y_new_pred, colors="black", linewidths=0.5)
 
-if st.button("Show Decision Boundary", use_container_width=True):
+if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width=True):
     fig, ax = plt.subplots(figsize=(15, 8))
     plot_boundary()
     plot_data()
@@ -1007,4 +1014,35 @@ if st.button("Show Decision Boundary", use_container_width=True):
               fontsize=12)
     st.pyplot(fig)
     
-# model evaluation button
+    # model evaluation
+    column1, column2 = st.columns(2)
+    y_pred = st.session_state["classifier"].predict(X_test_pre)
+    try:
+        y_pred = st.session_state["classifier"].predict(X_test_pre)
+    except:
+        st.error("Caution: Classifier is not trained yet")
+        st.stop()
+
+    # confusion-matrix
+    with column1:
+        fig, ax = plt.subplots(figsize=(6, 4))
+        hm = sns.heatmap(
+            confusion_matrix(y_test, y_pred),
+            cmap="Blues",
+            vmin=0,
+            annot=True,
+            square=True,
+            linewidths=1.5,
+            linecolor="white",
+            ax=ax
+        )
+        ax.set_xlabel("Predicted Label", fontweight="bold")
+        ax.set_xticklabels(classes, rotation=45, ha="right")
+        ax.set_ylabel("True Label", fontweight="bold")
+        ax.set_title(f"Confusion Matrix of {algorithm}",
+                     fontweight="bold")
+        st.pyplot(fig)
+
+    # metrics
+    with column2:
+        pass
