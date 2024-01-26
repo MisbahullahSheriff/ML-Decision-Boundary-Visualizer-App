@@ -1065,13 +1065,13 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
 
         with sub_column2:
             # precision
-            precision = f"{precision_score(y_test, y_pred, average="weighted"):.2f}"
+            precision = f"{precision_score(y_test, y_pred, average='weighted'):.2f}"
             st.metric(label="Precision", value=precision)
 
             # recall
-            recall = f"{recall_score(y_test, y_pred, average="weighted"):.2f}"
+            recall = f"{recall_score(y_test, y_pred, average='weighted'):.2f}"
             st.metric(label="Recall", value=recall)
 
             # f1-score
-            f_score = f"{f1_score(y_test, y_pred, average="weighted"):.2f}"
+            f_score = f"{f1_score(y_test, y_pred, average='weighted'):.2f}"
             st.metric(label="F1-Score", value=f_score)
