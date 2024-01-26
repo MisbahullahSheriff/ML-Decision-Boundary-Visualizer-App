@@ -45,6 +45,25 @@ st.markdown("""
 ### This app will analyze the Decision Boundary of a given Machine Learning Classifier for any given Dataset
 """)
 
+# credits
+st.markdown("""
+---
+#### Created By - Mohammed Misbahullah Sheriff
+""")
+
+github_url = "https://github.com/MisbahullahSheriff"
+linkedin_url = "https://www.linkedin.com/in/mohammed-misbahullah-sheriff/"
+
+st.markdown(
+    f'<div style="display: flex;">'
+    f'<a href="{linkedin_url}" style="margin-right: 10px; padding: 8px 20px;background-color: #1e6ed6; color: white; text-align: center; text-decoration:none; font-size: 16px; border-radius: 4px;">LinkedIN</a>'
+    f'<a href="{github_url}" style="padding: 8px 20px; background-color: #2a8503;color: white; text-align: center; text-decoration: none; font-size: 16px;border-radius: 4px;">GitHub</a>'
+    f'</div>',
+    unsafe_allow_html=True
+)
+st.markdown("---")
+
+# web-app guidelines
 st.info("""
 #### This app gives complete control to the User for:
 - Selecting the Dataset to Analyze
@@ -62,8 +81,6 @@ st.warning("""
 - The target variable must contain no more than 10 unique labels
 - User must select 2 numeric continous features (for convenient visualization)
 """)
-
-st.session_state["display_footer"] = True
 
 # getting the data
 file = st.sidebar.file_uploader("Upload Dataset (csv):")
@@ -991,20 +1008,3 @@ if st.button("Show Decision Boundary", use_container_width=True):
     st.pyplot(fig)
     
 # model evaluation button
-
-# page footer
-st.markdown("""
----
-#### Created By - Mohammed Misbahullah Sheriff
-""")
-
-github_url = "https://github.com/MisbahullahSheriff"
-linkedin_url = "https://www.linkedin.com/in/mohammed-misbahullah-sheriff/"
-
-st.markdown(
-    f'<div style="display: flex;">'
-    f'<a href="{linkedin_url}" style="margin-right: 10px; padding: 8px 20px;background-color: #1e6ed6; color: white; text-align: center; text-decoration:none; font-size: 16px; border-radius: 4px;">LinkedIN</a>'
-    f'<a href="{github_url}" style="padding: 8px 20px; background-color: #2a8503;color: white; text-align: center; text-decoration: none; font-size: 16px;border-radius: 4px;">GitHub</a>'
-    f'</div>',
-    unsafe_allow_html=True
-)
