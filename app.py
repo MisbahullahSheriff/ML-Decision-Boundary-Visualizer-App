@@ -1053,4 +1053,8 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
             # accuracy
             acc = f"{accuracy_score(y_test, y_pred):.2f}"
             st.metric(label="Accuracy", value=acc)
-            
+
+            # g-mean
+            acc = f"{geometric_mean_score(y_test, y_pred):.2f}"
+            st.metric(label="G-Mean", value=acc)
+
