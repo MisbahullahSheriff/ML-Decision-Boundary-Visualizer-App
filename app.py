@@ -1062,3 +1062,8 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
             mcc = f"{matthews_corrcoef(y_test, y_pred):.2f}"
             st.metric(label="Matthew's CC", value=mcc)
 
+        with sub_column2:
+            # precision
+            prec = f"{precision_score(y_test, y_pred):.2f}"
+            st.metric(label="Precision", value=prec)
+
