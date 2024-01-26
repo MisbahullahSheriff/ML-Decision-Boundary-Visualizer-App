@@ -1040,6 +1040,7 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
         ax.set_xlabel("Predicted Label", fontweight="bold")
         ax.set_xticklabels(classes, rotation=45, ha="right")
         ax.set_ylabel("True Label", fontweight="bold")
+        ax.set_yticklabels(classes, rotation=0)
         ax.set_title(f"Confusion Matrix of {algorithm}",
                      fontweight="bold")
         st.pyplot(fig)
