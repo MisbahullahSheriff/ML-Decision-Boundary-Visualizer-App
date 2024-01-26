@@ -929,14 +929,39 @@ else:
 
 # decision-boundary display button
 def plot_data():
-    pass
+    # concatenating train and test data for plot
+    X_total = np.vstack([X_train_pre, X_test_pre])
+    y_total = np.hstack([y_train, y_test])
+
+    # plotting entire data
+    for cls, color in zip(np.unique(y_total), color_codes):
+        subset = (y_total == cls)
+        plt.scatter(
+            X_total[subset, 0],
+            X_total[subset, 1],
+            s=40,
+            color=color,
+            marker=marker,
+            label=mapping[cls]
+        )
+    
+    # marking test data
+    plt.scatter(
+        X_test_pre[:, 0],
+        X_test_pre[:, 1],
+        s=150,
+        color="none",
+        marker="o",
+        edgecolors="black",
+        label="Test Data"
+    )
 
 def plot_boundary():
     pass
 
 if st.button("Show Decision Boundary", use_container_width=True):
-    fig, ax = plt.subplots(figsize=(10, 5))
-    plot_boundary()
+    fig, ax = plt.subplots(figsize=(15, 8))
+    # plot_boundary()
     plot_data()
     ax.set_xlabel(f"{selected_cols[0]}", fontweight="bold", fontsize=12)
     ax.set_ylabel(f"{selected_cols[1]}", fontweight="bold", fontsize=12)
@@ -944,7 +969,8 @@ if st.button("Show Decision Boundary", use_container_width=True):
     ax.legend(loc="upper left",
               bbox_to_anchor=(1.02, 1),
               title="Class Labels",
-              title_fontproperties=dict(weight="bold", size=13))
+              title_fontproperties=dict(weight="bold", size=13),
+              fontsize=12)
     st.pyplot(fig)
     
 # model evaluation button
