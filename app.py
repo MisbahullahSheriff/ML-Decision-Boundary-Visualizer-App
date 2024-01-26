@@ -28,6 +28,7 @@ from sklearn.ensemble import (
     GradientBoostingClassifier
 )
 from sklearn.neural_network import MLPClassifier
+from sklearn.utils.validation import check_is_fitted
 from xgboost import XGBClassifier
 
 st.set_page_config(
@@ -57,6 +58,7 @@ st.warning("""
 - The input file should be of '.csv' format
 - The uploaded data must have well-defined column labels
 - The uploaded data must have a discrete target variable (for classification)
+- The target variable must contain no more than 10 unique labels
 - User must select 2 numeric continous features (for convenient visualization)
 """)
 
@@ -880,8 +882,30 @@ else:
 if st.button("Train Classifier", use_container_width=True):
     classifier.fit(X_train_pre, y_train)
     st.success(f"{algorithm} Classifier successully trained!")
-else:
+
+# getting colors for unique class labels
+color_mapping = {
+    "Red": "#b50600",
+    "Blue": "#02449c",
+    "Green": "#02690c",
+    "Purple": "#710299",
+    "Yellow": "#c4c102",
+    "Jade": "#02ad8e",
+    "Dark Pink": "#ab023a",
+    "Dark Green": "#064201",
+    "Violet": "#2a0142",
+    "Dark Brown": "#420b01",
+}
+selected_colors = st.multiselect(f"Select {n_classes} Colors for class labels",
+                                 color_mapping.keys())
+if selected_colors is None:
+    st.error("Caution: Select colors for class labels")
     st.stop()
+elif len(selected_colors) != n_classes:
+    st.error(f"Caution: Select exactly {n_classes} colors")
+    st.stop()
+else:
+    color_codes = [color_mapping[color] for color in selected_colors]
 
 # decision-boundary display button
     
