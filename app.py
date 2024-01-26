@@ -91,7 +91,7 @@ file = st.sidebar.file_uploader("Upload Dataset (csv):")
 if file is not None:
     df = pd.read_csv(file)
 else:
-    st.error("Caution: Upload Data", icon="🚨")
+    st.error("Caution: Upload Data")
     st.stop()
 
 st.success("Data successfully uploaded!")
@@ -1034,6 +1034,7 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
             vmin=0,
             annot=True,
             square=True,
+            fmt="d",
             linewidths=1.5,
             linecolor="white",
             ax=ax
@@ -1074,4 +1075,3 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
             # f1-score
             f_score = f"{f1_score(y_test, y_pred):.2f}"
             st.metric(label="F1-Score", value=f_score)
-
