@@ -29,6 +29,7 @@ from sklearn.ensemble import (
 )
 from sklearn.neural_network import MLPClassifier
 from sklearn.utils.validation import check_is_fitted
+from sklearn.exceptions import NotFittedError
 from xgboost import XGBClassifier
 
 st.set_page_config(
@@ -61,6 +62,8 @@ st.warning("""
 - The target variable must contain no more than 10 unique labels
 - User must select 2 numeric continous features (for convenient visualization)
 """)
+
+st.session_state["display_footer"] = True
 
 # getting the data
 file = st.sidebar.file_uploader("Upload Dataset (csv):")
@@ -115,7 +118,13 @@ elif (target == col1) or (target == col2):
 st.success("Features successfully retrieved!")
 
 # splitting the data
-X = df.loc[:, selected_cols]
+X = (
+    df
+    .loc[:, selected_cols]
+    .assign(**{
+        f"{col}": pd.to_numeric(df[col], errors="coerce") for col in selected_cols
+    })
+)
 y = df.loc[:, target].copy()
 
 label_encoder = LabelEncoder()
@@ -137,27 +146,36 @@ X_train, X_test, y_train, y_test = train_test_split(
 test_indices = X_test.index
 
 # displaying selected features
-markers = ["o", "s", "^"]
-colors = ["orange", "deepskyblue", "forestgreen"]
+color_mapping = {
+    "Red": "#b50600",
+    "Blue": "#02449c",
+    "Green": "#02690c",
+    "Purple": "#710299",
+    "Orange": "#f25e02",
+    "Jade": "#02ad8e",
+    "Dark Pink": "#ab023a",
+    "Dark Green": "#064201",
+    "Violet": "#2a0142",
+    "Dark Brown": "#420b01",
+}
 
 column1, column2 = st.columns(2)
 
 with column1:
     with st.expander("View Filtered Data:"):
-        st.dataframe(df.loc[:, selected_cols],
+        st.dataframe(X,
                      use_container_width=True,
                      hide_index=True)
 
 with column2:
     fig, ax = plt.subplots()
-    for cls, marker, color in zip(np.unique(y),
-                                  markers[:n_classes],
-                                  colors[:n_classes]):
+    for cls, color in zip(np.unique(y),
+                          list(color_mapping.values())[:n_classes]):
         subset = (y == cls)
         ax.scatter(
             X.values[subset, 0],
             X.values[subset, 1],
-            marker=marker,
+            marker="o",
             c=color,
             edgecolors="black",
             label=f"{mapping[cls]}"
@@ -880,7 +898,7 @@ else:
 
 # training classifier button
 if st.button("Train Classifier", use_container_width=True):
-    classifier.fit(X_train_pre, y_train)
+    st.session_state["classifier"] = classifier.fit(X_train_pre, y_train)
     st.success(f"{algorithm} Classifier successully trained!")
 
 # getting marker
@@ -903,18 +921,6 @@ else:
     marker = marker_mapping[marker_choice]
 
 # getting colors for unique class labels
-color_mapping = {
-    "Red": "#b50600",
-    "Blue": "#02449c",
-    "Green": "#02690c",
-    "Purple": "#710299",
-    "Yellow": "#c4c102",
-    "Jade": "#02ad8e",
-    "Dark Pink": "#ab023a",
-    "Dark Green": "#064201",
-    "Violet": "#2a0142",
-    "Dark Brown": "#420b01",
-}
 selected_colors = st.multiselect(f"Select {n_classes} Colors for class labels",
                                  color_mapping.keys(),
                                  default=None)
@@ -939,7 +945,7 @@ def plot_data():
         plt.scatter(
             X_total[subset, 0],
             X_total[subset, 1],
-            s=40,
+            s=45,
             color=color,
             marker=marker,
             label=mapping[cls]
@@ -949,7 +955,7 @@ def plot_data():
     plt.scatter(
         X_test_pre[:, 0],
         X_test_pre[:, 1],
-        s=150,
+        s=180,
         color="none",
         marker="o",
         edgecolors="black",
@@ -957,11 +963,22 @@ def plot_data():
     )
 
 def plot_boundary():
-    pass
+    min_values = np.min(X_train_pre, axis=0) - 0.5
+    max_values = np.max(X_train_pre, axis=0) + 0.5
+    xx, yy = np.meshgrid(
+        np.linspace(min_values[0], max_values[0], 100),
+        np.linspace(min_values[1], max_values[1], 100)
+    )
+    X_new = np.c_[xx.ravel(), yy.ravel()]
+    y_new_pred = st.session_state["classifier"].predict(X_new).reshape(xx.shape)
+
+    cmap = ListedColormap(color_codes)
+    plt.contourf(xx, yy, y_new_pred, cmap=cmap, alpha=0.5)
+    plt.contour(xx, yy, y_new_pred, colors="black", linewidths=0.5)
 
 if st.button("Show Decision Boundary", use_container_width=True):
     fig, ax = plt.subplots(figsize=(15, 8))
-    # plot_boundary()
+    plot_boundary()
     plot_data()
     ax.set_xlabel(f"{selected_cols[0]}", fontweight="bold", fontsize=12)
     ax.set_ylabel(f"{selected_cols[1]}", fontweight="bold", fontsize=12)
@@ -969,7 +986,7 @@ if st.button("Show Decision Boundary", use_container_width=True):
     ax.legend(loc="upper left",
               bbox_to_anchor=(1.02, 1),
               title="Class Labels",
-              title_fontproperties=dict(weight="bold", size=13),
+              title_fontproperties=dict(weight="bold", size=15),
               fontsize=12)
     st.pyplot(fig)
     
@@ -986,8 +1003,8 @@ linkedin_url = "https://www.linkedin.com/in/mohammed-misbahullah-sheriff/"
 
 st.markdown(
     f'<div style="display: flex;">'
-    f'<a href="{linkedin_url}" style="margin-right: 10px; padding: 8px 20px; background-color: #1e6ed6; color: white; text-align: center; text-decoration: none; font-size: 16px; border-radius: 4px;">LinkedIN</a>'
-    f'<a href="{github_url}" style="padding: 8px 20px; background-color: #2a8503; color: white; text-align: center; text-decoration: none; font-size: 16px; border-radius: 4px;">GitHub</a>'
+    f'<a href="{linkedin_url}" style="margin-right: 10px; padding: 8px 20px;background-color: #1e6ed6; color: white; text-align: center; text-decoration:none; font-size: 16px; border-radius: 4px;">LinkedIN</a>'
+    f'<a href="{github_url}" style="padding: 8px 20px; background-color: #2a8503;color: white; text-align: center; text-decoration: none; font-size: 16px;border-radius: 4px;">GitHub</a>'
     f'</div>',
     unsafe_allow_html=True
 )
