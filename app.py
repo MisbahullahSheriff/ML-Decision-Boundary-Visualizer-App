@@ -604,7 +604,7 @@ elif algorithm == "Ada Boost":
     classifier = AdaBoostClassifier(**params)
 elif algorithm == "Gradient Boosting":
     st.warning("""
-#### Disclaimer:
+#### ⚠️ Disclaimer:
 - For multi-class classification, select `Log Loss` for parameter `Loss Function`
 - The `Exponential` loss function only works for binary classification problems
 """)
@@ -807,7 +807,7 @@ elif algorithm == "XG Boost":
     classifier = XGBClassifier(**params)
 else:
     st.warning("""
-#### Disclaimer:
+#### ⚠️ Disclaimer:
 - Provide comma-separated integers for the parameter `Size of Hidden Layer(s)`
     - Ex1: 10, 1
     - Ex2: 10, 5, 2
