@@ -67,7 +67,7 @@ st.markdown("---")
 
 # web-app guidelines
 st.info("""
-#### This app gives complete control to the User for:
+#### 💻 This app gives complete control to the User for:
 - Selecting the Dataset to Analyze
 - Selecting the Features for Modelling
 - Selecting the steps to Preprocess the Dataset for Modelling
@@ -76,7 +76,7 @@ st.info("""
 """)
 
 st.warning("""
-#### Must See:
+#### ⚠️ Must See:
 - The input file should be of '.csv' format
 - The uploaded data must have well-defined column labels
 - The uploaded data must have a discrete target variable (for classification)
