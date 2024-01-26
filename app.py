@@ -44,9 +44,7 @@ st.set_page_config(
 
 # page header
 st.markdown("""
-# Decision Boundary Visualizer - Web App
-            
-### This app will analyze the Decision Boundary of a given Machine Learning Classifier for any given Dataset
+# 📈 Decision Boundary Visualizer - A Machine Learning Web App
 """)
 
 # credits
