@@ -883,6 +883,25 @@ if st.button("Train Classifier", use_container_width=True):
     classifier.fit(X_train_pre, y_train)
     st.success(f"{algorithm} Classifier successully trained!")
 
+# getting marker
+marker_mapping = {
+    "Star": "*",
+    "Circle": "o",
+    "Square": "s",
+    "Triangle": "^",
+    "Diamond": "D",
+    "Pentagon": "p",
+    "Octagon": "8"
+}
+marker_choice = st.selectbox("Select Marker",
+                             marker_mapping.keys(),
+                             index=None)
+if marker_choice is None:
+    st.error("Caution: Select value for Marker")
+    st.stop()
+else:
+    marker = marker_mapping[marker_choice]
+
 # getting colors for unique class labels
 color_mapping = {
     "Red": "#b50600",
@@ -897,7 +916,8 @@ color_mapping = {
     "Dark Brown": "#420b01",
 }
 selected_colors = st.multiselect(f"Select {n_classes} Colors for class labels",
-                                 color_mapping.keys())
+                                 color_mapping.keys(),
+                                 default=None)
 if selected_colors is None:
     st.error("Caution: Select colors for class labels")
     st.stop()
@@ -908,6 +928,24 @@ else:
     color_codes = [color_mapping[color] for color in selected_colors]
 
 # decision-boundary display button
+def plot_data():
+    pass
+
+def plot_boundary():
+    pass
+
+if st.button("Show Decision Boundary", use_container_width=True):
+    fig, ax = plt.subplots(figsize=(10, 5))
+    plot_boundary()
+    plot_data()
+    ax.set_xlabel(f"{selected_cols[0]}", fontweight="bold", fontsize=12)
+    ax.set_ylabel(f"{selected_cols[1]}", fontweight="bold", fontsize=12)
+    ax.set_title(f"Decision Boundary of {algorithm}", fontweight="bold", fontsize=15)
+    ax.legend(loc="upper left",
+              bbox_to_anchor=(1.02, 1),
+              title="Class Labels",
+              title_fontproperties=dict(weight="bold", size=13))
+    st.pyplot(fig)
     
 # model evaluation button
 
