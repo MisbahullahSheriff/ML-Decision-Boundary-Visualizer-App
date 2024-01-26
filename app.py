@@ -15,10 +15,10 @@ from sklearn.preprocessing import (
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
-    roc_auc_score,
-    auc,
-    confusion_matrix,
-    ConfusionMatrixDisplay
+    precision_score,
+    recall_score,
+    matthews_corrcoef,
+    confusion_matrix
 )
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -33,6 +33,7 @@ from sklearn.ensemble import (
 from sklearn.neural_network import MLPClassifier
 from sklearn.utils.validation import check_is_fitted
 from sklearn.exceptions import NotFittedError
+from imblearn.metrics import geometric_mean_score
 from xgboost import XGBClassifier
 
 st.set_page_config(
@@ -406,6 +407,7 @@ elif algorithm == "Support Vector Machine":
     params["coef0"] = coef0
     params["gamma"] = gamma
     params["degree"] = degree
+    params["probability"] = True
     params["random_state"] = random_state
     classifier = SVC(**params)
 elif algorithm == "Decision Tree":
@@ -1016,7 +1018,7 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
     
     # model evaluation
     column1, column2 = st.columns(2)
-    y_pred = st.session_state["classifier"].predict(X_test_pre)
+
     try:
         y_pred = st.session_state["classifier"].predict(X_test_pre)
     except:
@@ -1045,4 +1047,10 @@ if st.button("Show Decision Boundary / Evaluate Classifier", use_container_width
 
     # metrics
     with column2:
-        pass
+        sub_column1, sub_column2 = st.columns(2)
+
+        with sub_column1:
+            # accuracy
+            acc = f"{accuracy_score(y_test, y_pred):.2f}"
+            st.metric(label="Accuracy", value=acc)
+            
